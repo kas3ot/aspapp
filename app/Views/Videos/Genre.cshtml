@@ -4,68 +4,68 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row" style="margin-top:3%">
+div class="row" style="margin-top:3%">
 
-    <form class="form-horizontal" action="/Videos/Search" method="get">
-        <div class="form-group">
-            <label class="col-md-4 control-label" for="search">Search</label>
-            <div class="col-md-4">
-                <input type="text" name="search" placeholder="Search by title" class="form-control" />
-            </div>
+<form class="form-horizontal" action="/Videos/Search" method="get">
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="search">Search</label>
+        <div class="col-md-4">
+            <input type="text" name="search" placeholder="Search by title" class="form-control" />
         </div>
-    </form>
+    </div>
+</form>
 
-    <form class="form-horizontal" action="/Videos/Genre" method="get">
-        <div class="form-group">
-            <label class="col-md-4 control-label" for="selectbasic">Genre</label>
-            <div class="col-md-4">
-                <select id="selectbasic" name="Genre" class="form-control" onchange="this.form.submit();">
-                    <option selected disabled>Select a genre</option>
-                    <option value="1">Comedy</option>
-                    <option value="2">Horror</option>
-                    <option value="3">Video tutorials</option>
-                    <option value="4">SciFi</option>
-                    <option value="5">Romance</option>
-                    <option value="6">Documentary</option>
-                    <option value="7">Kids</option>
-                </select>
-            </div>
+<form class="form-horizontal" action="/Videos/Genre" method="get">
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="selectbasic">Genre</label>
+        <div class="col-md-4">
+            <select id="selectbasic" name="Genre" class="form-control" onchange="this.form.submit();">
+                <option selected disabled>Select a genre</option>
+                <option value="1">Comedy</option>
+                <option value="2">Horror</option>
+                <option value="3">Video tutorials</option>
+                <option value="4">SciFi</option>
+                <option value="5">Romance</option>
+                <option value="6">Documentary</option>
+                <option value="7">Kids</option>
+            </select>
         </div>
-    </form>
+    </div>
+</form>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3>All Videos</h3>
-        </div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>All Videos @Html.ActionLink("+", "New", null, new { @class = "btn btn-primary btn-sm pull-right" })</h3>
+    </div>
 
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>ID @Html.ActionLink("+", "New", null, new { @class = "btn btn-primary btn-sm pull-right" })</th>
-                    <th>Title</th>
-                    <th>Genre</th>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Genre</th>
+                @if (Request.IsAuthenticated)
+                {
+                    <th>Edit / Delete</th>
+                }
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var video in Model)
+            {
+                //<a class='clickable-row' data-href="/videos/@video.Id">
+                <tr onclick="window.document.location='/Videos/Details/@video.Id';">
+                    <td> @video.Id </td>
+                    <td> @video.Title</td>
+                    <td> @video.Genre</td>
                     @if (Request.IsAuthenticated)
                     {
-                        <th>Edit / Delete</th>
+                        <td> @Html.ActionLink("Edit", "Edit", new { id = video.Id }, new { @class = "btn btn-success btn-sm" })  @Html.ActionLink("Delete", "Delete", new { id = video.Id }, new { @class = "btn btn-danger btn-sm" }) </td>
                     }
-
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var video in Model)
-                {
-                    //<a class='clickable-row' data-href="/videos/@video.Id">
-                    <tr onclick="window.document.location='/Videos/details/@video.Id';">
-                        <td> @video.Id </td>
-                        <td> @video.Title</td>
-                        <td> @video.Genre</td>
-                        @if (Request.IsAuthenticated)
-                        {
-                            <td> @Html.ActionLink("Edit", "Edit", new { id = video.Id }, new { @class = "btn btn-success btn-sm" })  @Html.ActionLink("Delete", "Delete", new { id = video.Id }, new { @class = "btn btn-danger btn-sm" }) </td>
-                        }
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+            }
+        </tbody>
+    </table>
+</div>
 </div>
