@@ -20,7 +20,7 @@
             <label class="col-md-4 control-label" for="selectbasic">Genre</label>
             <div class="col-md-4">
                 <select id="selectbasic" name="Genre" class="form-control" onchange="this.form.submit();">
-                    <option selected disabled>Select a genre</option>
+                    <option value="0">All</option>
                     <option value="1">Comedy</option>
                     <option value="2">Horror</option>
                     <option value="3">Video tutorials</option>
@@ -48,13 +48,11 @@
                     {
                         <th>Edit / Delete</th>
                     }
-                    
                 </tr>
             </thead>
             <tbody>
                 @foreach (var video in Model)
                 {
-                    //<a class='clickable-row' data-href="/videos/@video.Id">
                     <tr onclick="window.document.location='/Videos/Details/@video.Id';">
                         <td> @video.Id </td>
                         <td> @video.Title</td>

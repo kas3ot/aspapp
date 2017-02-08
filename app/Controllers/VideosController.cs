@@ -113,6 +113,10 @@ namespace app.Controllers
 
         public ActionResult Genre(Genre genre)
         {
+            if (genre == 0)
+            {
+                return View(_dbContext.Videos.OrderByDescending(id => id.Id).ToList());
+            }
             var videos = _dbContext.Videos.OrderByDescending(id => id.Id).Where(s => s.Genre == genre).ToList();
             return View(videos);
         }
