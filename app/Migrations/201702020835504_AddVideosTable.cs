@@ -83,7 +83,7 @@ namespace app.Migrations
                         Title = c.String(),
                         Description = c.String(),
                         Genre = c.Int(nullable: false),
-                    })
+                })
                 .PrimaryKey(t => t.Id);
             
         }

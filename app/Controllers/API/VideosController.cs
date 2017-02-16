@@ -16,12 +16,16 @@ namespace app.Controllers.API
         {
             _context = new ApplicationDbContext();
         }
+
         //GET /api/videos
+        [HttpGet]
         public IEnumerable<Video> GetVideos()
         {
             return _context.Videos.ToList();
         }
+
         //GET /api/videos/1
+        [HttpGet]
         public Video GetVideo(int id)
         {
             var video = _context.Videos.SingleOrDefault(v => v.Id == id);
@@ -33,6 +37,7 @@ namespace app.Controllers.API
 
             return video;
         }
+
         // POST /api/videos
         [HttpPost]
         public Video CreateVideo(Video video)
@@ -66,8 +71,10 @@ namespace app.Controllers.API
             videodb.Genre = video.Genre;
             _context.SaveChanges();
         }
+
+        //delete /api/delete/1
         [HttpDelete]
-        public void Delete(int id)
+        public void DeleteVideo(int id)
         {
             var video = _context.Videos.SingleOrDefault(v => v.Id == id);
 

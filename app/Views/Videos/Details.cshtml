@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h2>Details: </h2><br/>
+<h3>Video Title: @Model.Title</h3><br />
+<h3>Video Description: @Model.Description</h3><br/>
 
-@Model.Description
+<h3>Video Image: </h3><img src="~/UploadedImages/@Model.VideoImg" />

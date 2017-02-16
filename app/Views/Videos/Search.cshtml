@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-div class="row" style="margin-top:3%">
+<div class="row" style="margin-top:3%">
 
 <form class="form-horizontal" action="/Videos/Search" method="get">
     <div class="form-group">
@@ -21,6 +21,7 @@ div class="row" style="margin-top:3%">
         <div class="col-md-4">
             <select id="selectbasic" name="Genre" class="form-control" onchange="this.form.submit();">
                 <option selected disabled>Select a genre</option>
+                <option value="0">All</option>
                 <option value="1">Comedy</option>
                 <option value="2">Horror</option>
                 <option value="3">Video tutorials</option>

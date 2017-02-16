@@ -4,8 +4,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["info"] != null)
+    {
+        <div class="alert alert-@TempData["type"]" style="margin-top:3%">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong></strong> @TempData["info"]
+        </div>
+}
+
 <div class="row" style="margin-top:3%">
-    
+
     <form class="form-horizontal" action="/Videos/Search" method="get">
         <div class="form-group">
             <label class="col-md-4 control-label" for="search">Search</label>
@@ -32,7 +40,7 @@
             </div>
         </div>
     </form>
-    
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3>All Videos @Html.ActionLink("+", "New", null, new { @class = "btn btn-primary btn-sm pull-right" })</h3>
