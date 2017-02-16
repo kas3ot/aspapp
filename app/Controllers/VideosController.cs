@@ -103,8 +103,8 @@ namespace app.Controllers
                     return HttpNotFound();
 
                 var imagetodelete = videoInDb.VideoImg;
-
-                var imageupload = "~/UploadedImages/"+ image.FileName;
+                var imageupload1 = stringGenerateRandomString(10);
+                var imageupload = "~/UploadedImages/"+ imageupload1 + Path.GetExtension(image.FileName).ToLower();
                 
                 string fullPath = Request.MapPath("~/UploadedImages/" + imagetodelete);
 
