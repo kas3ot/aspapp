@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace app.Controllers
@@ -36,31 +37,44 @@ namespace app.Controllers
             if(image == null)
             {
                 TempData["type"] = "danger";
-                TempData["info"] = "MyMessage";
+                TempData["info"] = "Image is required";
                 return RedirectToAction("New");
             }
             var imagename = Path.GetFileName(image.FileName);
             var allowedExtansions = new[] { ".jpeg", ".jpg", ".png" };
             var checkextension = Path.GetExtension(image.FileName).ToLower();
             var size = image.ContentLength;
-            var fullPath = "~/UploadedImages/" + imagename;
+           
 
             foreach (string x in allowedExtansions)
             {
                 if (!allowedExtansions.Contains(checkextension) || size > 360000)
                 {
                     TempData["type"] = "danger";
-                    TempData["info"] = "MyMessage";
+                    TempData["info"] = "This image type is not allowed or is more than 36MB please try again";
                     return RedirectToAction("index");
                 }
             }
-            
-            image.SaveAs(Server.MapPath(fullPath));
+
+            var randomstring = stringGenerateRandomString(10);
+            imagename = randomstring + checkextension;
+            var fullPath = "~/UploadedImages/" + imagename;
+            WebImage img = new WebImage(image.InputStream);
+
+            img.Resize(300,300);
+
+            //image.SaveAs(Server.MapPath(fullPath));
+
+            img.Save(fullPath);
             var videoInDb = _dbContext.Videos.ToList();
             video.VideoImg = imagename;
 
             _dbContext.Videos.Add(video);
             _dbContext.SaveChanges();
+
+            TempData["type"] = "info";
+            TempData["info"] = "The Video has been saved!";
+           
             return RedirectToAction("Index");
         }
 
@@ -103,7 +117,7 @@ namespace app.Controllers
                     if (!allowedExtansions.Contains(checkextension) || size > 360000)
                     {
                         TempData["type"] = "danger";
-                        TempData["info"] = "This File is not allowed or is more than 36MB please try again";
+                        TempData["info"] = "This image is not allowed or is more than 36MB please try again";
 
                         return RedirectToAction("Edit/"+ video.Id);
                     }
@@ -201,24 +215,23 @@ namespace app.Controllers
             return View();
         }
 
-        public void image(HttpPostedFileBase image)
+        public static string stringGenerateRandomString(int length)
         {
-            var imagename = Path.GetFileName(image.FileName);
-            var allowedExtansions = new[] { ".jpeg", ".jpg", ".png" };
-            var checkextension = Path.GetExtension(image.FileName).ToLower();
-            var size = image.ContentLength;
-            var fullPath = "~/UploadedImages/" + imagename;
-
-            foreach (string x in allowedExtansions)
+            string c = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            //It will generate string with combination of small,capital letters and numbers
+            char[] charArr = c.ToCharArray();
+            string randomString = string.Empty;
+            Random objRandom = new Random();
+            for (int i = 0; i < length; i++)
             {
-                if (!allowedExtansions.Contains(checkextension) || size > 360000)
-                {
-                    
-                }
+                //Don’t Allow Repetation of Characters
+                int x = objRandom.Next(1, charArr.Length);
+                if (!randomString.Contains(charArr.GetValue(x).ToString()))
+                    randomString += charArr.GetValue(x);
+                else
+                    i--;
             }
-
-            image.SaveAs(Server.MapPath(fullPath));
-            var videoInDb = _dbContext.Videos.ToList();          
+            return randomString;
         }
     }
 }
