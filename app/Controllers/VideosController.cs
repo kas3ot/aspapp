@@ -1,4 +1,5 @@
 ﻿using app.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,6 @@ namespace app.Controllers
 {
     public class VideosController : Controller
     {
-
         private ApplicationDbContext _dbContext;
 
         public VideosController()
@@ -19,7 +19,6 @@ namespace app.Controllers
             _dbContext = new ApplicationDbContext();
         }
 
-        // GET: Videos
         public ActionResult Index()
         {
             var videos = _dbContext.Videos.OrderByDescending(id => id.Id).ToList();
@@ -68,7 +67,7 @@ namespace app.Controllers
             img.Save(fullPath);
             var videoInDb = _dbContext.Videos.ToList();
             video.VideoImg = imagename;
-
+            video.user_id = User.Identity.GetUserId();
             _dbContext.Videos.Add(video);
             _dbContext.SaveChanges();
 
@@ -80,31 +79,32 @@ namespace app.Controllers
 
         public ActionResult Edit(int id)
         {
-            if (Request.IsAuthenticated)
+            var video = _dbContext.Videos.SingleOrDefault(v => v.Id == id);
+            if (Request.IsAuthenticated && video.user_id == User.Identity.GetUserId())
             {
-                var video = _dbContext.Videos.SingleOrDefault(v => v.Id == id);
-
                 if (video == null)
                     return HttpNotFound();
 
                 return View(video);
             }
-            return RedirectToAction("../Account/Login");
+            TempData["type"] = "danger";
+            TempData["info"] = "You are not allowed to delete this video!";
+            return RedirectToAction("../Videos");
         }
 
         [HttpPost]
         public ActionResult Update(Video video, HttpPostedFileBase image)
         {
-            if (Request.IsAuthenticated)
+            var videoInDb = _dbContext.Videos.SingleOrDefault(v => v.Id == video.Id);
+            if (Request.IsAuthenticated && videoInDb.user_id == User.Identity.GetUserId())
             {
-                var videoInDb = _dbContext.Videos.SingleOrDefault(v => v.Id == video.Id);
 
                 if (videoInDb == null)
                     return HttpNotFound();
 
                 var imagetodelete = videoInDb.VideoImg;
                 var imageupload1 = stringGenerateRandomString(10);
-                var imageupload = "~/UploadedImages/"+ imageupload1 + Path.GetExtension(image.FileName).ToLower();
+                var imageuploadpath = "~/UploadedImages/"+ imageupload1 + Path.GetExtension(image.FileName).ToLower();
                 
                 string fullPath = Request.MapPath("~/UploadedImages/" + imagetodelete);
 
@@ -128,15 +128,19 @@ namespace app.Controllers
                     System.IO.File.Delete(fullPath);
                 }
 
-                image.SaveAs(Server.MapPath(imageupload));
+                WebImage img = new WebImage(image.InputStream);
+
+                img.Resize(300, 300);
+
+                img.Save(Server.MapPath(imageuploadpath));
 
                 videoInDb.Title = video.Title;
                 videoInDb.Description = video.Description;
                 videoInDb.Genre = video.Genre;
-                videoInDb.VideoImg = image.FileName;
+                videoInDb.VideoImg = imageupload1 + Path.GetExtension(image.FileName).ToLower();
                 _dbContext.SaveChanges();
 
-                TempData["type"] = "Info";
+                TempData["type"] = "info";
                 TempData["info"] = "Your Video has been updated";
 
                 return RedirectToAction("Index");
@@ -148,24 +152,26 @@ namespace app.Controllers
 
         public ActionResult Delete(int id)
         {
-            if (Request.IsAuthenticated)
+            var video = _dbContext.Videos.SingleOrDefault(v => v.Id == id);
+            if (Request.IsAuthenticated && video.user_id == User.Identity.GetUserId())
             {
-                var video = _dbContext.Videos.SingleOrDefault(v => v.Id == id);
 
                 if (video == null)
                     return HttpNotFound();
 
                 return View(video);
             }
-
-            return RedirectToAction("../Account/Login");
+            TempData["type"] = "danger";
+            TempData["info"] = "You are not allowed to delete this video!";
+            return RedirectToAction("../Videos");
         }
 
         public ActionResult DoDelete(int id)
         {
-            if (Request.IsAuthenticated)
+            var video = _dbContext.Videos.SingleOrDefault(v => v.Id == id);
+            if (Request.IsAuthenticated && video.user_id == User.Identity.GetUserId())
             {
-                var video = _dbContext.Videos.SingleOrDefault(v => v.Id == id);
+                
                 var imagename = video.VideoImg;
                 string fullPath = Request.MapPath("~/UploadedImages/" + imagename);
 
@@ -185,7 +191,9 @@ namespace app.Controllers
                 return RedirectToAction("Index");
             }
 
-            return RedirectToAction("../Account/Login");
+            TempData["type"] = "danger";
+            TempData["info"] = "You are not allowed to delete this video!";
+            return RedirectToAction("../Videos");
         }
 
         public ActionResult Search(string search)

@@ -224,6 +224,10 @@
     <Compile Include="Migrations\201702151332583_addimagetovideos.Designer.cs">
       <DependentUpon>201702151332583_addimagetovideos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702210914429_AddUserId.cs" />
+    <Compile Include="Migrations\201702210914429_AddUserId.Designer.cs">
+      <DependentUpon>201702210914429_AddUserId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -320,6 +324,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702151332583_addimagetovideos.resx">
       <DependentUpon>201702151332583_addimagetovideos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702210914429_AddUserId.resx">
+      <DependentUpon>201702210914429_AddUserId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

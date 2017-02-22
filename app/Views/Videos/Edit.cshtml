@@ -14,7 +14,8 @@
     </div>
 }
 
-@using (Html.BeginForm("Update", "Videos", FormMethod.Post, new { @class = "form", @enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Update", "Videos", FormMethod.Post, new { @class = "form", @style = "width:50%", @enctype = "multipart/form-data" }))
 {
     Html.RenderPartial("_VideoForm");
 }
+

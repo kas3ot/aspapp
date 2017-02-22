@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<app.Models.Video>
+@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -65,9 +66,13 @@
                         <td> @video.Id </td>
                         <td> @video.Title</td>
                         <td> @video.Genre</td>
-                        @if (Request.IsAuthenticated)
+                        @if (Request.IsAuthenticated && @video.user_id == User.Identity.GetUserId())
                         {
                             <td> @Html.ActionLink("Edit", "Edit", new { id = video.Id }, new { @class = "btn btn-success btn-sm" })  @Html.ActionLink("Delete", "Delete", new { id = video.Id }, new { @class = "btn btn-danger btn-sm" }) </td>
+                        }
+                        else if(Request.IsAuthenticated)
+                        {
+                            <td>  </td>
                         }
                     </tr>
                 }

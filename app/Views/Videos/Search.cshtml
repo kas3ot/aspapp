@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<app.Models.Video>
+@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "Search";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -55,14 +56,17 @@
         <tbody>
             @foreach (var video in Model)
             {
-                //<a class='clickable-row' data-href="/videos/@video.Id">
                 <tr onclick="window.document.location='/Videos/Details/@video.Id';">
                     <td> @video.Id </td>
                     <td> @video.Title</td>
                     <td> @video.Genre</td>
-                    @if (Request.IsAuthenticated)
+                    @if (@video.user_id == User.Identity.GetUserId())
                     {
                         <td> @Html.ActionLink("Edit", "Edit", new { id = video.Id }, new { @class = "btn btn-success btn-sm" })  @Html.ActionLink("Delete", "Delete", new { id = video.Id }, new { @class = "btn btn-danger btn-sm" }) </td>
+                    }
+                    else
+                    {
+                        <td>  </td>
                     }
                 </tr>
             }
